@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script type="text/javascript" src="../lib/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="all" href="../css/custom.css" />
+	<style type="text/css">
+	body{background:white;margin:5%;padding:0px;font-size:13px;text-align:left;}
+	h2{font-family:sans-serif;}
+	h4{font-family:sans-serif;}
+	.pb{font-size:13px;border-collapse:collapse;}
+	.pb th{font-weight:bold;text-align:center;border:1px solid #333333;padding:2px;}
+	.pb td{border:1px solid #333333;padding:2px;}
+	</style>
+</head>
+<body>
+    <h2>Judul Cetakan</h2>
+    <h4>Deskripsi Cetakan</h4>
+    <div id="isi"></div>
+    <script type="text/javascript">
+        var win = Ti.UI.getCurrentWindow();
+        $('h2').html(win.title);
+        $('h4').html(win.desk);
+        $('#isi').html(win.tabel);
+        setTimeout(function(){ print() },555);
+    </script>
+</body>
+</html>

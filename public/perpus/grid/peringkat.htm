@@ -1,0 +1,48 @@
+<script type="text/javascript">
+    $("#grid").jqGrid({
+        caption: "Peringkat Kinerja Pegawai",
+        url: "peringkat",
+        datatype: "json",
+        loadonce: true,
+        colModel: [{
+            label: 'Peringkat',
+            name: 'peringkat',
+            index: 'peringkat',
+            sorttype: 'int',
+            align: 'center',
+            classes: 'merah'
+        }, {
+            label: 'NIP',
+            name: 'nip',
+            index: 'nip'
+        }, {
+            label: 'Nama',
+            name: 'nama',
+            index: 'nama'
+        }, {
+            label: 'Skor',
+            name: 'skor',
+            index: 'skor',
+            sorttype: 'float'
+        }],
+        height: 231,
+        rowNum: 10,
+        pager: "#pager"
+    }).jqGrid("navGrid", "#pager", {
+        add: false,
+        edit: false,
+        del: false,
+        search: false,
+        refresh: false
+    }).jqGrid("navButtonAdd", "#pager", {
+        caption: '',
+        buttonicon: 'ui-icon-print',
+//        onClickButton: function() {
+//            cetak('Peringkat Kinerja Pegawai', '', $('#grid'));
+//        },
+        title: 'Cetak tabel'
+    })
+</script>
+
+<table id="grid"></table>
+<div id="pager"></div>
