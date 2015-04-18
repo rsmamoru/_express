@@ -50,10 +50,13 @@ if (app.get('env') === 'development') {
 }
 */
 
-var baseLama
-
+// -----------------------------
 // production error handler
 // no stacktraces leaked to user
+// -----------------------------
+
+var baseLama
+
 app.use(function(err, req, res, next) {
     var base = req.path.split('/')[1]
     var dirAset = 'public/' + base
@@ -67,7 +70,7 @@ app.use(function(err, req, res, next) {
         fs.readFile('public' + req.path, 'utf8', function(error, data) {
             if (error) {
                 console.warn('Tidak bisa membaca berkas tujuan.')
-                tampilError(err, res)
+                next(err)
             } else {
                 res.send(data)
             }
@@ -90,7 +93,7 @@ app.use(function(err, req, res, next) {
                     fs.readFile(dirAset + '/index.html', 'utf8', function(error, data) {
                         if (error) {
                             console.warn('Tidak bisa membaca berkas index.')
-                            tampilError(err, res)
+                            next(err)
                         } else {
                             res.send(data)
                         }
@@ -100,18 +103,18 @@ app.use(function(err, req, res, next) {
                 }
             })
         } else {
-            tampilError(err, res)
+            next(err)
         }
     }
 });
 
-function tampilError(err, res) {
+app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
         error: {}
     });
-}
+});
 
 
 module.exports = app;
