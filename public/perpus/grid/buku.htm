@@ -1,0 +1,87 @@
+<script type="text/javascript">
+    var barisTadi = null
+
+    $("#grid").jqGrid({
+        caption: "Kelola Buku",
+        url: "buku",
+        datatype: "json",
+        mtype: "POST",
+        prmNames: { id: 'id_buku' },
+        colModel: [{
+            label: 'Judul',
+            name: 'judul',
+            index: 'judul',
+            editable: true,
+            editoptions: { maxlength: '100' },
+            editrules: { required: true }
+        }, {
+            label: 'Pengarang',
+            name: 'pengarang',
+            index: 'pengarang',
+            editable: true,
+            editoptions: { maxlength: '100' },
+            editrules: { required: true }
+        }, {
+            label: 'Penerbit',
+            name: 'penerbit',
+            index: 'penerbit',
+            editable: true,
+            editoptions: { maxlength: '30' },
+            editrules: { required: true }
+        }, {
+            label: 'Kota',
+            name: 'kota',
+            index: 'kota',
+            editable: true,
+            editoptions: { maxlength: '30' }
+        }, {
+            label: 'Tahun Terbit',
+            name: 'tahun',
+            index: 'tahun',
+            sorttype: 'int',
+            editable: true,
+            editrules: {
+                integer: true,
+                minValue: 0
+            }
+        }, {
+            label: 'Nomor Buku',
+            name: 'nomor_buku',
+            index: 'nomor_buku',
+            editable: true,
+            editoptions: { maxlength: '30' }
+        }],
+        onSelectRow: function(barisIni) {
+            if (barisIni && barisIni!==barisTadi) {
+                var parameters = { keys: true }
+
+                // Jika pindah dari baris sebelumnya, maka simpan perubahan baris.
+                // Simpan perubahan baris juga bisa dilakukan dengan tekan Enter.
+                if (barisTadi) $('#grid').jqGrid("saveRow", barisTadi, parameters)
+
+                // Edit baris.
+                $('#grid').jqGrid("editRow", barisIni, parameters)
+
+                // Sekarang baris sebelumnya berubah menjadi baris ini.
+                barisTadi = barisIni
+            }
+        },
+        editurl: "buku",
+        height: 231,
+        rownumbers: true,
+        rowNum: 10,
+        pager: "#pager"
+    }).jqGrid("navGrid", "#pager", {
+        edit: false
+    }).jqGrid("navButtonAdd", "#pager", {
+        caption: '',
+        buttonicon: 'ui-icon-print',
+        onClickButton: function() {
+            cetak('Daftar Buku', '', $('#grid'))
+        },
+        title: 'Cetak tabel'
+    })
+</script>
+
+<table id="grid"></table>
+<div id="pager"></div>

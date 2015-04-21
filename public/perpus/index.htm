@@ -17,138 +17,24 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <link href="css/style.css" rel="stylesheet" type="text/css" media="all"/>
     <link href="css/slider.css" rel="stylesheet" type="text/css" media="all"/>
     <link href="css/login.css" rel="stylesheet" type="text/css" media="all"/>
-    <script type="text/javascript" src="lib/jquery-2.1.3.min.js"></script>
+    <link href="css/custom.css" rel="stylesheet" type="text/css" media="all"/>
+    <script type="text/javascript" src="lib/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.nivo.slider.js"></script>
     <script type="text/javascript" src="lib/grid.locale-id.js"></script>
     <script type="text/javascript">jQuery.jgrid.no_legacy_api = true;</script>
     <script type="text/javascript" src="lib/jquery-ui.min.js"></script>
     <script type="text/javascript" src="lib/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.notify.min.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="lib/jquery-ui.min.css"/>
     <link rel="stylesheet" type="text/css" media="screen" href="lib/ui.jqgrid.css"/>
-    <script type="text/javascript" src="lib/grid.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="lib/ui.notify.css" />
+    <script type="text/javascript" src="js/grid.js"></script>
     <script type="text/javascript">
         $(window).load(function () {
             $('#slider').nivoSlider();
+            $("#container-bottom").notify({ stack:'above' });
         });
-        function goLogin() {
-            lebar_bg = parseInt($('.h_bg').css('width'));
-            lebar_login = parseInt($('.login').css('width'));
-            left_login = (lebar_bg - lebar_login) / 2;
-            $('.login').css('left', left_login);
-            $('.login').css('display', 'block');
-        }
-        function goKelola() {
-            $('#menulogin').css('display', 'none');
-            $('.login').css('display', 'none');
-            removeActive();
-            $('#idLogout').addClass('active');
-            $('#menukelola').css('display', 'block');
-        }
-        function goHome() {
-            $('#menukelola').css('display', 'none');
-            $('#menulogin').css('display', 'block');
-            $('.divContent').fadeOut(700);
-        }
-        function proclogin(pengguna, sandi) {
-            $.ajax({
-                type: "POST",
-                url: "login",
-                data: "pengguna="+pengguna + "&sandi="+sandi,
-                success: function(res) {
-//                    alert(JSON.stringify(res))
-                    if (res) {
-                        $('#pengguna').val('')
-                        $('#sandi').val('')
-                        goKelola()
-                    } else {
-                        $('#nologin').css('display', 'block')
-//                        $('#pengguna').focus();
-                    }
-                },
-                error: function(res) {
-                    alert(JSON.stringify(res))
-                    $('#nologin').css('display', 'block')
-//                    $('#pengguna').focus();
-                }
-            });
-        }
-        function bersih() {
-            $('#pengguna').val('');
-            $('#sandi').val('');
-        }
-        function go(id) {
-//            $('.divContent').html('')
-//            $('.divContent').fadeOut(700)
-            removeActive();
-            $('#' + id).addClass('active')
-            if (id == 'idAlternatif') {
-                procContent('alternatif.htm')
-            }
-            else if (id == 'idKriteria') {
-                //alert('kriteria');
-            }
-            else if (id == 'idPenilaian') {
-            }
-            else if (id == 'idPeringkat') {
-                procContent('peringkat.htm')
-            }
-        }
-        function removeActive() {
-            $('#idLogout').removeClass('active');
-            /*	$('#idPengguna').removeClass('active'); */
-            $('#idAlternatif').removeClass('active');
-            $('#idKriteria').removeClass('active');
-            $('#idPenilaian').removeClass('active');
-            $('#idPeringkat').removeClass('active');
-        }
     </script>
-    <style>
-        .logo {
-            width: 90%;
-            margin-left: 4%;
-        }
-
-        .judulPerpus {
-            font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-            font-size: 50pt;
-            line-height: 54pt;
-            color: #333;
-        }
-
-        #spk {
-            color: white;
-            background-color: black;
-            border-radius: 10px 10px 10px 10px;
-            box-shadow: -10px 10px 5px #888888;
-        }
-
-        #minat {
-            text-shadow: -10px 10px 5px #888888;
-        }
-
-        .namaPerpus {
-            font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-            font-size: 14pt;
-            line-height: 18pt;
-            letter-spacing: 10pt;
-            color: white;
-            background-color: black;
-            box-shadow: -10px 10px 5px #888888;
-        }
-
-        .divContent {
-            position: absolute;
-            top: 290px;
-            left: 13.2%;
-            width: 73.6%;
-            height: 64.2%;
-            background: rgba(153, 172, 193, 0.7);
-            z-index: 30;
-            text-align: center;
-            vertical-align: middle;
-            display: none;
-        }
-    </style>
 </head>
 <body>
 <div class="btm_border">
@@ -170,14 +56,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <li class='active' onClick="goLogin()"><a href='#'><span>Login</span></a></li>
                     </ul>
                     <ul id='menukelola' style="display:none">
-                        <li id='idLogout' class='active' onClick="goHome()"><a href='#'><span>Logout</span></a></li>
-                        <!-- <li id="idPengguna" onClick="go(this.id)"><a href='#'><span>Pengguna</span></a></li> -->
-                        <li id="idAlternatif" onClick="go(this.id)"><a href='#'><span>Alternatif</span></a></li>
-                        <li id="idKriteria" onClick="go(this.id)"><a href='#'><span>Kriteria</span></a></li>
-                        <li id="idPenilaian" onClick="go(this.id)"><a href='#'><span>Penilaian</span></a></li>
-                        <li id="idPeringkat" onClick="go(this.id)"><a href='#'><span>Peringkat</span></a></li>
-                        <div class="clear"></div>
+                        <li id="logout" class='active' onClick="goLogout()"><a href='#'><span>Logout</span></a></li>
+                        <!-- <li id="pengguna" onClick="go(this.id)"><a href='#'><span>Pengguna</span></a></li> -->
+                        <li id="buku" onClick="go(this.id)"><a href='#'><span>Buku</span></a></li>
+                        <li id="kriteria" onClick="go(this.id)"><a href='#'><span>Kriteria</span></a></li>
+                        <li id="penilaian" onClick="go(this.id)"><a href='#'><span>Penilaian</span></a></li>
+                        <li id="peringkat" onClick="go(this.id)"><a href='#'><span>Peringkat</span></a></li>
                     </ul>
+                    <div class="clear"></div>
                 </div>
                 <div class="clear"></div>
             </div>
@@ -204,12 +90,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         <h1>Login Pengguna</h1>
 
         <form method="post" action="#" onSubmit="proclogin($('#pengguna').val(), $('#sandi').val()); return false;">
-            <p><input type="text" id="pengguna" value="admin" placeholder="Pengguna" size="10" autofocus /></p>
-                      <!--onFocus="bersih();$('#nologin').css('display','none')"-->
-
-            <p><input type="password" id="sandi" value="admin" placeholder="Sandi" size="10" /></p>
-            &nbsp;<span id='nologin' style="font-weight:bold;color:red;display:none">Pengguna atau Sandi Salah</span>
-
+            <p><input type="text" id="pengguna" placeholder="Pengguna" size="10" autofocus /></p>
+            <p><input type="password" id="sandi" placeholder="Sandi" size="10" /></p>
+            <p>&nbsp;<span id='nologin' style="font-weight:bold;color:red;visibility:hidden;">Pengguna atau Sandi Salah</span></p>
             <p class="submit"><input type="submit" id="commit" value="Login"></p>
         </form>
     </div>
@@ -217,5 +100,15 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <!------ Content --------------->
     <div class="divContent">oke</div>
     <!------ End Content --------------->
+    <!------ Notification --------------->
+    <div id="container-bottom" style="display:none; top:auto; bottom:0; margin:0 10px 10px 0;">
+        <div id="withIcon">
+            <div style="float:left;margin:0 10px 0 0"><img src="images/uwg.png" style="width:40px;" /></div>
+            <h1>#{judul}</h1>
+            <p style="font: 12px Helvetica, Arial, sans-serif;">#{teks}</p>
+        </div>
+    </div>
+    <!------ End Notification --------------->
+</div>
 </body>
 </html>

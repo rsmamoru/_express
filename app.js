@@ -79,7 +79,7 @@ app.use(function(err, req, res, next) {
     }
 
     var muatan = './' + dirAset + '/app'
-    console.log('memuat: ' + muatan)
+    console.log('\nmemuat: ' + muatan)
     try {
         reload(muatan)(err, req, res)
     } catch(e) {

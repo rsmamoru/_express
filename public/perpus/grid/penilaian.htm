@@ -1,0 +1,205 @@
+<script type="text/javascript" src="lib/isNumber.js"></script>
+<script type="text/javascript" src="lib/getMinMax.js"></script>
+<script type="text/javascript">
+    var datKrit = null
+    var datAlt = null
+
+    // Kolom Alternatif.
+    var datMod = [{
+        name: 'nama_alt',
+        label: 'Alternatif'
+    }]
+    var datModEdit = [{
+        name: 'nama_alt',
+        label: 'Alternatif'
+    }]
+
+    $.ajax({
+        type: "POST",
+        url: "kriteria",
+        success: function(res) {
+//            alert(JSON.stringify(res))
+            datKrit = res
+
+            // Kolom-kolom Kriteria.
+            for (i=0; i<datKrit.length; i++) {
+                datMod.push({
+                    label: datKrit[i].nama_krit,
+                    name: datKrit[i].id_krit,
+                    align: 'center',
+                    sortable: false
+                })
+                datModEdit.push({
+                    label: datKrit[i].nama_krit,
+                    name: datKrit[i].id_krit,
+                    align: 'center',
+                    sortable: false,
+                    editable: true,
+                    edittype: 'select',
+                    editoptions: { value: "4:Sangat Baik;3:Baik;2:Cukup;1:Kurang" },
+                    formatter: 'select'
+                })
+            }
+
+            tampilTabel()
+        }
+    })
+
+    $.ajax({
+        type: "POST",
+        url: "alternatif",
+        success: function(res) {
+//            alert(JSON.stringify(res))
+            datAlt = res
+
+            tampilTabel()
+        }
+    })
+
+    function bacaAlt() { return datAlt }
+
+    function konversiKrit(krit_asli) { for (k=0;k<datKrit.length;k++) if(krit_asli==datKrit[k].id_krit) return k+2 }
+
+    function isiNilai() {
+        $.ajax({
+            type: "POST",
+            url: "penilaian",
+            success: function(res) {
+//                alert(JSON.stringify(res))
+                var datNilai = res
+                for (i=0;i<datNilai.length;i++) $('#gridNilai').jqGrid("setCell",datNilai[i].alternatif,konversiKrit(datNilai[i].kriteria),datNilai[i].nilai)
+            }
+        })
+    }
+
+    function tampilTabel() {
+        if(!datKrit || !datAlt) return false
+
+        // Tabel Penilaian.
+        $("#gridNilai").jqGrid({
+            caption: "Penilaian Peminatan Buku",
+            url: "alternatif",
+            datatype: "json",
+            mtype: "POST",
+            prmNames: { id: 'id_alt' },
+            colModel: datModEdit,
+            loadComplete: isiNilai,
+            cellEdit: true,
+            cellurl: "penilaian",
+            rownumbers: true,
+            pager: "#pagerNilai",
+            pgbuttons: false,
+            pginput: false
+        }).jqGrid("navGrid", "#pagerNilai", {
+            position: 'right',
+            add: false,
+            edit: false,
+            del: false,
+            search: false,
+            refresh: false
+        }).jqGrid("navButtonAdd", "#pagerNilai", {
+            caption: '',
+            buttonicon: 'ui-icon-print',
+            onClickButton: function() {
+                cetak('Daftar Nilai Peminatan Buku', '', $('#gridNilai'));
+            },
+            title: 'Cetak tabel'
+        }).jqGrid("navSeparatorAdd", "#pagerNilai").jqGrid("navButtonAdd", "#pagerNilai", {
+            caption: 'Proses perhitungan',
+            buttonicon: 'ui-icon-calculator',
+            onClickButton: hitungSAW,
+            title: 'Proses perhitungan'
+        })
+
+        // Tabel Nilai Ternormalisasi.
+        $("#gridNormal").jqGrid({
+            caption: "Nilai Ternormalisasi",
+            hiddengrid: true,
+            data: bacaAlt(),
+            datatype: "local",
+            colModel: datMod,
+            height: "auto",
+            rownumbers: true
+        })
+
+        // Tabel Nilai Total Integral.
+        $("#gridIntegral").jqGrid({
+            caption: "Nilai Total Integral",
+            hiddengrid: true,
+            data: bacaAlt(),
+            datatype: "local",
+            prmNames: { id: 'id_alt' },
+            colModel: [{
+                name: 'nama_alt',
+                label: 'Alternatif'
+            }, {
+                name: 'integral',
+                label: 'Nilai Total Integral',
+                sortable: false
+            }],
+            width: $("#gridNormal").width(),
+            height: "auto",
+            rownumbers: true
+        })
+    }
+
+    function hitungSAW() {
+        // 1. Menghitung Nilai Ternormalisasi.
+        for (k=0;k<datKrit.length;k++) {
+            jenis=datKrit[k].jenis
+            datKolom=$('#gridNilai').jqGrid("getCol",k+2)
+            if(jenis=='benefit') {
+                pembanding=getMax(datKolom)
+            }else{
+                pembanding=getMin(datKolom)
+            }
+            for (b=0;b<datAlt.length;b++) {
+                if(!isNumber(datKolom[b])) {
+                    alert('Mohon lengkapi data penilaian terlebih dahulu.')
+                    return false
+                }
+                if(jenis=='benefit') {
+                    nilaiNormal=datKolom[b]/pembanding
+                }else{
+                    nilaiNormal=pembanding/datKolom[b]
+                }
+                $('#gridNormal').jqGrid("setCell",datAlt[b].id_alt,k+2,nilaiNormal)
+            }
+        }
+
+        // 2. Menghitung Nilai Total Integral.
+        totalBobot=0;
+        for (k=0;k<datKrit.length;k++) totalBobot+=datKrit[k].bobot
+        for (b=0;b<datAlt.length;b++) {
+            datBaris=$('#gridNormal').jqGrid("getRowData",datAlt[b].id_alt)
+            nilaiIntegral=0
+            for (k=0;k<datKrit.length;k++) nilaiIntegral+=datBaris[datKrit[k].id_krit]*datKrit[k].bobot/totalBobot
+            $('#gridIntegral').jqGrid("setCell",datAlt[b].id_alt,2,nilaiIntegral)
+        }
+
+        // Kirim data untuk disimpan.
+        datID=$('#gridIntegral').jqGrid("getCol",0)
+        datSkor=$('#gridIntegral').jqGrid("getCol",2)
+        $.ajax({
+            type: "POST",
+            url: "penilaian",
+            data: "integral=ya&id_alt=" + JSON.stringify(datID) + "&skor=" + JSON.stringify(datSkor),
+            success: function() {
+                var notif = $("#container-bottom").notify("create", {
+                    judul: $(document).find('title').text(),
+                    teks: 'Perhitungan SAW selesai.'
+                }, {
+                    click: function() {
+                        notif.close()
+                    }
+                })
+            }
+        })
+    }
+</script>
+
+<table id="gridNilai"></table>
+<div id="pagerNilai"></div>
+<br /><br />
+<table id="gridNormal"></table>
+<table id="gridIntegral"></table>

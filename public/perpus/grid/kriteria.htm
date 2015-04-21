@@ -1,0 +1,77 @@
+<script type="text/javascript">
+    var barisTadi = null
+
+    $("#grid").jqGrid({
+        caption: "Kelola Kriteria",
+        url: "kriteria",
+        datatype: "json",
+        mtype: "POST",
+        prmNames: { id: 'id_krit' },
+        colModel: [{
+            label: 'Nama Kriteria',
+            name: 'nama_krit',
+            index: 'nama_krit',
+            editable: true,
+            editoptions: { maxlength: '50' },
+            editrules: { required: true }
+        }, {
+            label: 'Satuan',
+            name: 'satuan',
+            index: 'satuan',
+            editable: true,
+            editoptions: { maxlength: '25' }
+        }, {
+            label: 'Jenis',
+            name: 'jenis',
+            index: 'jenis',
+            editable: true,
+            edittype: 'select',
+            editoptions: {
+                value: "benefit:benefit;cost:cost",
+                defaultValue: 'benefit'
+            }
+        }, {
+            label: 'Bobot',
+            name: 'bobot',
+            index: 'bobot',
+            sorttype: 'int',
+            editable: true,
+            editrules: {
+                integer: true,
+                minValue: 0
+            }
+        }],
+        onSelectRow: function(barisIni) {
+            if (barisIni && barisIni!==barisTadi) {
+                var parameters = { keys: true }
+
+                // Jika pindah dari baris sebelumnya, maka simpan perubahan baris.
+                // Simpan perubahan baris juga bisa dilakukan dengan tekan Enter.
+                if (barisTadi) $('#grid').jqGrid("saveRow", barisTadi, parameters)
+
+                // Edit baris.
+                $('#grid').jqGrid("editRow", barisIni, parameters)
+
+                // Sekarang baris sebelumnya berubah menjadi baris ini.
+                barisTadi = barisIni
+            }
+        },
+        editurl: "kriteria",
+        height: 231,
+        rownumbers: true,
+        rowNum: 10,
+        pager: "#pager"
+    }).jqGrid("navGrid", "#pager", {
+        edit: false
+    }).jqGrid("navButtonAdd", "#pager", {
+        caption: '',
+        buttonicon: 'ui-icon-print',
+        onClickButton: function() {
+            cetak('Daftar Kriteria', '', $('#grid'));
+        },
+        title: 'Cetak tabel'
+    })
+</script>
+
+<table id="grid"></table>
+<div id="pager"></div>

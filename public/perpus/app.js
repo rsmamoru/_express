@@ -16,16 +16,6 @@ function app(err, req, res) {
     var tujuan = req.path.split('/')[2]
     console.log('tujuan: ' + tujuan)
     if (tujuan) prosesMuat(err, req, res, tujuan)
-/*
-    switch (tujuan) {
-        case 'login':
-            prosesMuat(err, req, res, tujuan)
-            break
-        case 'peringkat':
-            prosesMuat(err, req, res, tujuan)
-            break
-    }
-*/
 }
 
 module.exports = app

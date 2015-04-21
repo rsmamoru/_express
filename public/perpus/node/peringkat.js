@@ -1,21 +1,27 @@
-var reload = require('require-reload')(require)
 var roundDecimal = require('./lib/roundDecimal')
 
 function bacaPeringkat(req, res) {
-    var db = reload('./db')()
+    var db = require('./db')()
 
     var items = []
     var p = 1
     db.each("SELECT * FROM peringkat", function(err, baris) {
-        if (err) throw err
+        if (err) {
+            console.error('Gagal baca data.')
+            console.error(err)
+            res.send()
+            return
+        }
         items.push({
             peringkat: p++,
-            nip: baris.pengguna,
-            nama: baris.nama,
+            judul: baris.judul,
+            pengarang: baris.pengarang,
             skor: roundDecimal(baris.skor, 5)
         })
     }, function() {
-        console.log('terima data: ' + JSON.stringify(items))
+        console.log('\nterima data:')
+        console.log(items)
+        console.log()
         res.send(items)
     })
 

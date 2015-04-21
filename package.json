@@ -1,7 +1,10 @@
 {
   "name": "_express",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
+  "node-uwg": {
+    "1": "SPK Peminatan Buku Perpustakaan Universitas Widyagama"
+  },
   "scripts": {
     "start": "node ./bin/www"
   },

@@ -1,6 +1,6 @@
 <script type="text/javascript">
     $("#grid").jqGrid({
-        caption: "Peringkat Kinerja Pegawai",
+        caption: "Peringkat Peminatan Buku",
         url: "peringkat",
         datatype: "json",
         loadonce: true,
@@ -10,15 +10,15 @@
             index: 'peringkat',
             sorttype: 'int',
             align: 'center',
-            classes: 'merah'
+            classes: 'hijau'
         }, {
-            label: 'NIP',
-            name: 'nip',
-            index: 'nip'
+            label: 'Judul',
+            name: 'judul',
+            index: 'judul'
         }, {
-            label: 'Nama',
-            name: 'nama',
-            index: 'nama'
+            label: 'Pengarang',
+            name: 'pengarang',
+            index: 'pengarang'
         }, {
             label: 'Skor',
             name: 'skor',
@@ -37,9 +37,9 @@
     }).jqGrid("navButtonAdd", "#pager", {
         caption: '',
         buttonicon: 'ui-icon-print',
-//        onClickButton: function() {
-//            cetak('Peringkat Kinerja Pegawai', '', $('#grid'));
-//        },
+        onClickButton: function() {
+            cetak('Peringkat Peminatan Buku', '', $('#grid'));
+        },
         title: 'Cetak tabel'
     })
 </script>

@@ -1,0 +1,48 @@
+.logo {
+    width: 90%;
+    margin-left: 4%;
+}
+.judulPerpus {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 50pt;
+    line-height: 54pt;
+    color: #333;
+}
+#spk {
+    color: white;
+    background-color: black;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: -10px 10px 5px #888888;
+}
+#minat {
+    text-shadow: -10px 10px 5px #888888;
+}
+.namaPerpus {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 14pt;
+    line-height: 18pt;
+    letter-spacing: 10pt;
+    color: white;
+    background-color: black;
+    box-shadow: -10px 10px 5px #888888;
+}
+.divContent {
+    position: absolute;
+    top: 260px;
+    left: 50%;
+    -ms-transform: translate(-50%,0);
+    -webkit-transform: translate(-50%,0);
+    transform: translate(-50%,0);
+/*
+    width: 73.6%;
+    height: 64.2%;
+    background: rgba(153, 172, 193, 0.7);
+*/
+    z-index: 30;
+    text-align: center;
+    vertical-align: middle;
+    display: none;
+}
+.hijau {
+    color: green;
+}
