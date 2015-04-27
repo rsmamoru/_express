@@ -1,3 +1,4 @@
+var xssF = require('xss-filters')
 var db, p
 
 function bacaKrit(req, res) {
@@ -11,6 +12,7 @@ function bacaKrit(req, res) {
     if (p.oper) {
         console.log('operasi: ' + p.oper)
         if (p.bobot == '') p.bobot = 1
+        for (var n in p) p[n] = xssF.inHTMLData(p[n])
         switch (p.oper) {
             case 'add': tambahKrit(); break;
             case 'edit': ubahKrit(); break;

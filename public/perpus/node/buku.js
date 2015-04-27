@@ -1,3 +1,4 @@
+var xssF = require('xss-filters')
 var db, p
 
 function bacaBuku(req, res) {
@@ -10,6 +11,7 @@ function bacaBuku(req, res) {
     // Tambah-Ubah-Hapus.
     if (p.oper) {
         console.log('operasi: ' + p.oper)
+        for (var n in p) p[n] = xssF.inHTMLData(p[n])
         switch (p.oper) {
             case 'add': tambahBuku(); break;
             case 'edit': ubahBuku(); break;
