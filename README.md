@@ -5,7 +5,7 @@ This project is a Node JS based application that try to imitate the XAMPP stack.
 I used to work using XAMPP stack before this. The good thing with XAMPP is that we can place multiple PHP websites on one running web server without having to reconfigure or restart the server. That is very convenient and I miss it when using Node JS.
 
 ### Workaround
-In this project, I use the [Express](//expressjs.com/) framework, but I don't really use the directory structure. Here is my scenario to get as close as possible to what XAMPP has:
+In this project, I use the [Express](//expressjs.com) framework, but I don't really use the directory structure. Here is my scenario to get as close as possible to what XAMPP has:
 
 1. The PHP websites must be placed inside the `htdocs` folder. Each subfolder is responsible for one website and contains all the files including client and server codes. Since `htdocs` folder can serve static contents, the similar folder in Express is the `public` folder.
 
